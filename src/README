@@ -1,0 +1,16 @@
+Welcome!!!
+
+Use this code to generate a distance matrix for nerghbor-joining method
+
+Go to Makefile directory
+
+    make 
+
+Then
+
+    ./TreeDM
+
+You can get patterns file and Distance_Matrix(DM) file
+
+Use this DM as input for nerghbor-joining method
+You can get a tree
