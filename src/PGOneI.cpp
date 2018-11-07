@@ -7,11 +7,12 @@
 #include <iomanip>
 #include <cmath>
 #include <cstring>
-//#include <cmath>
 #include <numeric>
 
+//#include "cmdline.h"
 #include "PGOneI_PD.h"
 #include "PGOneI_PerProtein.h"
+
 
 
 using namespace std;
@@ -29,6 +30,65 @@ struct MotifSupportPosition {
 	int Support;
 	vector<RPIPP> OUTRPIPP;
 };
+
+
+void helpinformation(void) {
+
+	std::cerr << "\nUsage: ./TreeDM [options] ...\n\n"
+		<< "options:\n"
+		<< "  -n   <int>   The minimal number of non_wildcard residues in the pattern to be reported\n"
+		<< "  -s   <float>   The minimal proportion of proteins haveing the pattern\n"
+		<< "  -m   <int>   The maximal length of wildcard in the patterns\n"
+		<< "  -i   <string>   The pathway and filename of sequences in fasta format\n"
+		<< "  -p   <string>   The pathway and filename of the PatternSpace file\n"
+		<< "  -o   <string>   The pathway of the distance matrix"
+		<< "  \n"
+		<< "  -h/?   help pritn this message\n"
+		<< std::endl;
+	exit(1);
+}
+
+int non_wildcard;
+float support;
+int max_wildcard;
+string inputfile;
+string pattern_space = "./ppfile";
+string outputDM = "./";
+
+int tree_options(int aargc, char *aargv[]) {
+	int i;
+	for (i = 1; i < aargc; i++) {
+		if (aargv[i][0] != '-') return i;
+		switch (aargv[i][1]) {
+		case 'n': non_wildcard = atoi(aargv[++i]); break;
+		case 's': support = atof(aargv[++i]); break;
+		case 'm': max_wildcard = atoi(aargv[++i]); break;
+		case 'i': inputfile = aargv[++i]; break;
+		case 'p': pattern_space = aargv[++i]; break;
+		case 'o': outputDM = aargv[++i]; break;
+		break;
+		case 'h': helpinformation();
+		case '?': helpinformation();
+		}
+	}
+	return i;
+}
+
+
+
+
+/*cmdline::parser a;
+
+	a.add<int>("non wildcard", 'n', " The minimal number of non wildcard residues in the pattern to be reported; ", true);
+	a.add<float>("support", 's', "The minimal proportion of proteins haveing the pattern;", true);
+	a.add<int>("max-wildcard", 'm', "The maximal length of wildcard in the patterns;", true);
+	a.add<string>("the input file", 'i', "The pathway and filename of sequences in fasta format;", true, "");
+	a.add<string>("the output of pattern space", 'p', "The pathway and filename of the PatternSpace file", false, "./ppfile");
+	a.add<string>("the output distance matrix path", 'o', "The pathway of the distance matrix", false, "./");
+
+	a.parse_check(argc, argv);
+
+	cout << a.get<int>("non wildcard") << endl;*/
 //struct PatternPosition {
 //	int RealProteinIndex;
 //	vector<int> PositionInProtein;
@@ -39,15 +99,7 @@ struct MotifSupportPosition {
 //	vector<PatternPosition> FrequentPatternPosition;
 //};
 int MaxPatternLength = 0;
-
 vector<string> AllInputFile;
-
-//typedef struct node {
-//	struct node *lchild;
-//	struct node *rchild;
-//	string Lable;
-//}BiTreeNode, *BiTree;
-
 
 void mining(ProjectedDatabase & TempProData,
 	const vector <string>& SequencesDatabase,
@@ -79,52 +131,74 @@ void CosineSimilarityMatirx(const vector<vector<int> > &TotalPatternVector, cons
 
 int main(int argc, char *argv[])
 {
-	if (argc != 7) {
-		cout << "\n"
-			<< "Welcome to TreeDM(PGOneI) (mining sequential patterns by Pattern Growth \n"
-			<< "from one dataset, generate the Distance_Matirx). \n"
-			<< "6 arguments are required here:\n"
-			<< "1. The first argument should be the minimal number of \n"
-			<< "   non-wildcard residues in the pattern to be reported;\n"
-			<< "2. The second argument should be the minimal proportion\n"
-			<< "   of proteins haveing the pattern; \n"
-			<< "3. The third argument should be the maximal length of\n"
-			<< "   wildcard in the patterns; \n"
-			<< "4. The fourth argument should be the pathway and filename\n"
-			<< "   of protein sequences in fasta format;\n"
-			<< "5. The fifth argument should be the pathway and filename\n"
-			<< "   of the PatternSpace file\n"
-			<< "6. The Distance_Matirx path." << endl;
-		return 0;
+	if (argc == 1) helpinformation();
+	for (int i = 0; i < argc; i++)
+	{
+		std::cout << argv[i] << ' ';
 	}
 
-	int Min_Pat_Length = atoi(argv[1]);
+	int options = tree_options(argc, argv);
+
+	ifstream  inf_seq(inputfile.c_str());
+	if (!inf_seq)
+	{
+		cerr << "Sorry, cannot find the input_file" << endl;
+	}
+
+	ofstream outpatterns(pattern_space.c_str());
+	if (!outpatterns)
+		cout << "Sorry, cannot write to the patterns_file: " << endl;
+	
+	
+
+
+
+	//if (argc != 7) {
+	//	cout << "\n"
+	//		<< "Welcome to TreeDM(PGOneI) (mining sequential patterns by Pattern Growth \n"
+	//		<< "from one dataset, generate the Distance_Matirx). \n"
+	//		<< "6 arguments are required here:\n"
+	//		<< "1. The first argument should be the minimal number of \n"
+	//		<< "   non-wildcard residues in the pattern to be reported;\n"
+	//		<< "2. The second argument should be the minimal proportion\n"
+	//		<< "   of proteins haveing the pattern; \n"
+	//		<< "3. The third argument should be the maximal length of\n"
+	//		<< "   wildcard in the patterns; \n"
+	//		<< "4. The fourth argument should be the pathway and filename\n"
+	//		<< "   of sequences in fasta format;\n"
+	//		<< "5. The fifth argument should be the pathway and filename\n"
+	//		<< "   of the PatternSpace file;\n"
+	//		<< "6. The Distance_Matirx path." << endl;
+	//	return 0;
+	//}
+
+	//int Min_Pat_Length = atoi(argv[1]);
 	//number of non_wildcard items, AxTxxD is 3
-	double Min_Sup_ratio = atof(argv[2]);
+	//double Min_Sup_ratio = atof(argv[2]);
 	//ratio of proteins support the pattern in the input
-	int Max_WildCard_Length = atoi(argv[3]);
+	//int Max_WildCard_Length = atoi(argv[3]);
 	//maximal allowed wildcard length, AxTxxxTxxD is 3
 
 	//cout << AllInputFile.size() << endl;
 	//string OneInputFile = AllInputFile[9];//for multi_file processing
-	ifstream  inf_Seq(argv[4]);
-	if (!inf_Seq)
-		cout << "Sorry, cannot find the file: " << argv[4] << endl;
+	//ifstream  inf_Seq(argv[4]);
+	//if (!inf_Seq)
+	//	cout << "Sorry, cannot find the file: " << argv[4] << endl;
 
-	char OutputFilename[200];      // output file name
-	strcpy(OutputFilename, argv[5]);
-	//string OutputFile = "F:/PhylogeneticTree/OriginalSequenceWithoutInsertDeleteMiningSupportIs0.1/PatternSupporrtPosition.txt";
+	//char OutputFilename[200];      // output file name
+	//strcpy(OutputFilename, argv[5]);
+	////string OutputFile = "F:/PhylogeneticTree/OriginalSequenceWithoutInsertDeleteMiningSupportIs0.1/PatternSupporrtPosition.txt";
 
 
-	ofstream outfSeq(OutputFilename);
-	if (!outfSeq)
-		cout << "Sorry, cannot write to the file: " << argv[5] << endl;
+	//ofstream outfSeq(OutputFilename);
+	//if (!outfSeq)
+	//	cout << "Sorry, cannot write to the file: " << argv[5] << endl;
 
 	// ######################### input sequences database ##############
 	vector < string > SequencesDatabase;
 	vector < string > Label;
 	string TempName, TempStr;
-	while (inf_Seq >> TempName >> TempStr)
+	while (inf_seq >> TempName >> TempStr)
 	{
 		if (!TempName.empty())
 			Label.push_back(TempName);
@@ -161,7 +235,7 @@ int main(int argc, char *argv[])
 		ProjectedDatabase ProData(EmptyProData, false);// create projecteddatabase
 		ProData.InitiateProData(AASubType[AAIndex], SequencesDatabase);
 		cout << "AA is ..." << AASubType[AAIndex] << endl;
-		mining(ProData, SequencesDatabase, Min_Sup_ratio, Min_Pat_Length, Max_WildCard_Length, MaxPatternLength, TempOutPut, OutPut);
+		mining(ProData, SequencesDatabase, support, non_wildcard, max_wildcard, MaxPatternLength, TempOutPut, OutPut);
 	}
 	if (TempOutPut[TempOutPut.size() - 1].Motif[0] != '@')
 	{
@@ -177,38 +251,38 @@ int main(int argc, char *argv[])
 	cout << "close pattern_numbers = " << OutPut.size() << endl;
 	cout << "all pattern numbers is " << TempOutPut.size() << endl;
 
- 	outfSeq << "The numbers of FP is " << OutPut.size() << endl;
+ 	outpatterns << "The numbers of FP is " << OutPut.size() << endl;
 	for (int OutPutIndex = 0; OutPutIndex < (int)OutPut.size(); OutPutIndex++)
 	{
 		for (int PrefixIndex = 0; PrefixIndex < (int)OutPut[OutPutIndex].Motif.size(); PrefixIndex++)
 		{
-			outfSeq << OutPut[OutPutIndex].Motif[PrefixIndex];
+			outpatterns << OutPut[OutPutIndex].Motif[PrefixIndex];
 		}
-		outfSeq << "\t" << OutPut[OutPutIndex].Support << endl/* "\t"*/;
+		outpatterns << "\t" << OutPut[OutPutIndex].Support << endl/* "\t"*/;
 		//kyy*******************************************************pattern position******************************************************
 		for (int preProindex = 0; preProindex <= OutPut[OutPutIndex].OUTRPIPP.size() - 1; preProindex++)
 		{
-			outfSeq << "(" << OutPut[OutPutIndex].OUTRPIPP[preProindex].RPI << "|";
+			outpatterns << "(" << OutPut[OutPutIndex].OUTRPIPP[preProindex].RPI << "|";
 			for (int positionindex = 0; positionindex <= OutPut[OutPutIndex].OUTRPIPP[preProindex].PP.size() - 1; positionindex++)
 			{
-				outfSeq << OutPut[OutPutIndex].OUTRPIPP[preProindex].PP[positionindex] << "\t";
+				outpatterns << OutPut[OutPutIndex].OUTRPIPP[preProindex].PP[positionindex] << "\t";
 			}
-			outfSeq << ")";
+			outpatterns << ")";
 		}
-		outfSeq << "\n";
+		outpatterns << "\n";
 		//	//kyy******************************************************pattern position********************************************************
 	}
 	//************OutPut***********
-    string DMPath;
-    DMPath.assign(argv[6],strlen(argv[6]));
+    //string DMPath;
+    //DMPath.assign(argv[6],strlen(argv[6]));
 
-	if (OutPut.size() == 0)//changed 2017-10.12
-	{//changed 2017-10.12
-			cout << "no distance matrix file" << endl;//changed 2017-10.12
-			return 0;//changed 2017-10.12
-	}//changed 2017-10.12
-	else//changed 2017-10.12
-	{//changed 2017-12.29
+	if (OutPut.size() == 0)
+	{
+			cout << "no distance matrix file" << endl;
+			return 0;
+	}
+	else
+	{
 
 	vector<vector<int> > TotalPatternVector;
 
@@ -230,7 +304,7 @@ int main(int argc, char *argv[])
 
 	TotalPatternVector = WIDFWeightPatternVector(SequencesDatabase, OutPut, Label);
 	//cout << "total pattern vector size is " << TotalPatternVector.size() << endl;
-	JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/WDM.txt");
+	JensenShannonDivergence(TotalPatternVector, Label, outputDM + "/DM.txt");
 	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/6CLIDFPVCSM.txt");
 
 
