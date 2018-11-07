@@ -76,19 +76,6 @@ int tree_options(int aargc, char *aargv[]) {
 
 
 
-
-/*cmdline::parser a;
-
-	a.add<int>("non wildcard", 'n', " The minimal number of non wildcard residues in the pattern to be reported; ", true);
-	a.add<float>("support", 's', "The minimal proportion of proteins haveing the pattern;", true);
-	a.add<int>("max-wildcard", 'm', "The maximal length of wildcard in the patterns;", true);
-	a.add<string>("the input file", 'i', "The pathway and filename of sequences in fasta format;", true, "");
-	a.add<string>("the output of pattern space", 'p', "The pathway and filename of the PatternSpace file", false, "./ppfile");
-	a.add<string>("the output distance matrix path", 'o', "The pathway of the distance matrix", false, "./");
-
-	a.parse_check(argc, argv);
-
-	cout << a.get<int>("non wildcard") << endl;*/
 //struct PatternPosition {
 //	int RealProteinIndex;
 //	vector<int> PositionInProtein;
@@ -150,51 +137,6 @@ int main(int argc, char *argv[])
 		cout << "Sorry, cannot write to the patterns_file: " << endl;
 	
 	
-
-
-
-	//if (argc != 7) {
-	//	cout << "\n"
-	//		<< "Welcome to TreeDM(PGOneI) (mining sequential patterns by Pattern Growth \n"
-	//		<< "from one dataset, generate the Distance_Matirx). \n"
-	//		<< "6 arguments are required here:\n"
-	//		<< "1. The first argument should be the minimal number of \n"
-	//		<< "   non-wildcard residues in the pattern to be reported;\n"
-	//		<< "2. The second argument should be the minimal proportion\n"
-	//		<< "   of proteins haveing the pattern; \n"
-	//		<< "3. The third argument should be the maximal length of\n"
-	//		<< "   wildcard in the patterns; \n"
-	//		<< "4. The fourth argument should be the pathway and filename\n"
-	//		<< "   of sequences in fasta format;\n"
-	//		<< "5. The fifth argument should be the pathway and filename\n"
-	//		<< "   of the PatternSpace file;\n"
-	//		<< "6. The Distance_Matirx path." << endl;
-	//	return 0;
-	//}
-
-	//int Min_Pat_Length = atoi(argv[1]);
-	//number of non_wildcard items, AxTxxD is 3
-	//double Min_Sup_ratio = atof(argv[2]);
-	//ratio of proteins support the pattern in the input
-	//int Max_WildCard_Length = atoi(argv[3]);
-	//maximal allowed wildcard length, AxTxxxTxxD is 3
-
-	//cout << AllInputFile.size() << endl;
-	//string OneInputFile = AllInputFile[9];//for multi_file processing
-	//ifstream  inf_Seq(argv[4]);
-	//if (!inf_Seq)
-	//	cout << "Sorry, cannot find the file: " << argv[4] << endl;
-
-	//char OutputFilename[200];      // output file name
-	//strcpy(OutputFilename, argv[5]);
-	////string OutputFile = "F:/PhylogeneticTree/OriginalSequenceWithoutInsertDeleteMiningSupportIs0.1/PatternSupporrtPosition.txt";
-
-
-	//ofstream outfSeq(OutputFilename);
-	//if (!outfSeq)
-	//	cout << "Sorry, cannot write to the file: " << argv[5] << endl;
-
-	// ######################### input sequences database ##############
 	vector < string > SequencesDatabase;
 	vector < string > Label;
 	string TempName, TempStr;
@@ -287,19 +229,7 @@ int main(int argc, char *argv[])
 	vector<vector<int> > TotalPatternVector;
 
 
-	//TotalPatternVector = BinaryPatternVector(SequencesDatabase, TempOutPut, Label, DMPath + "/ZOPV.txt");
-	//JaccardDistanceMatrix(TotalPatternVector, Label, DMPath + "/1ZOPVJDM.txt");
-	//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/2ZOPVJSDM.txt");
 
-	//TotalPatternVector = BinaryPatternVector( SequencesDatabase, OutPut, Label, DMPath+"/CZOPV.txt");
-	//JaccardDistanceMatrix( TotalPatternVector,  Label, DMPath+"/1CZOPVJDM.txt");
-	//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/2CZOPVJSDM.txt");
-
-
-	//TotalPatternVector = FIDFWeightPatternVector(SequencesDatabase, OutPut, Label, DMPath + "/CTFIDFPV.txt");
-	//cout << "total pattern vector size is " << TotalPatternVector.size() << endl;
-	//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/3CLIDFPVJSDM.txt");
-	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/4CLIDFPVCSM.txt");
 
 
 	TotalPatternVector = WIDFWeightPatternVector(SequencesDatabase, OutPut, Label);
@@ -313,12 +243,6 @@ int main(int argc, char *argv[])
 	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/8TFIDFPVCSM.txt");
 
 
-	//TotalPatternVector = ConsiderWeightDuplicateOverlapPatternVector( SequencesDatabase, OutPut, Label, DMPath+"/WDOPV.txt");
-	//cout << "total pattern vector size is " << TotalPatternVector.size() << endl;
-	//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/7WDOPVJSDM.txt");
-	//EuclideanDistanceMatrix(TotalPatternVector, Label, DMPath+"/42WDOPVEDM.txt");
-	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath+"/8WDOPVCSDM.txt");
-	}//changed 171229
 	cout << "output  " << OutPut.size() << endl;
 	cout << "tempoutput  " << TempOutPut.size() << endl;
 	return 0;
