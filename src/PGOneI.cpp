@@ -226,22 +226,22 @@ int main(int argc, char *argv[])
 	else
 	{
 
-	vector<vector<int> > TotalPatternVector;
+		vector<vector<int> > TotalPatternVector;
 
 
 
 
 
-	TotalPatternVector = WIDFWeightPatternVector(SequencesDatabase, OutPut, Label);
-	//cout << "total pattern vector size is " << TotalPatternVector.size() << endl;
-	JensenShannonDivergence(TotalPatternVector, Label, outputDM + "/DM.txt");
-	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/6CLIDFPVCSM.txt");
+		TotalPatternVector = WIDFWeightPatternVector(SequencesDatabase, OutPut, Label);
+		//cout << "total pattern vector size is " << TotalPatternVector.size() << endl;
+		JensenShannonDivergence(TotalPatternVector, Label, outputDM + "/DM.txt");
+		//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/6CLIDFPVCSM.txt");
 
 
-	//TotalPatternVector = IDFWeightPatternVector(SequencesDatabase, TempOutPut, Label, DMPath + "/TFIDFPV.txt");
-	//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/6TFIDFPVJSDM.txt");
-	//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/8TFIDFPVCSM.txt");
-
+		//TotalPatternVector = IDFWeightPatternVector(SequencesDatabase, TempOutPut, Label, DMPath + "/TFIDFPV.txt");
+		//JensenShannonDivergence(TotalPatternVector, Label, DMPath + "/6TFIDFPVJSDM.txt");
+		//CosineSimilarityMatirx(TotalPatternVector, Label, DMPath + "/8TFIDFPVCSM.txt");
+	}
 
 	cout << "output  " << OutPut.size() << endl;
 	cout << "tempoutput  " << TempOutPut.size() << endl;
