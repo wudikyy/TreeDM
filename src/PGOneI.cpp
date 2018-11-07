@@ -40,8 +40,8 @@ void helpinformation(void) {
 		<< "  -s   <float>   The minimal proportion of proteins haveing the pattern\n"
 		<< "  -m   <int>   The maximal length of wildcard in the patterns\n"
 		<< "  -i   <string>   The pathway and filename of sequences in fasta format\n"
-		<< "  -p   <string>   The pathway and filename of the PatternSpace file\n"
-		<< "  -o   <string>   The pathway of the distance matrix"
+		<< "  -p   <string>   The pathway and filename of the PatternSpace file£¨defaults: ./ppfile£©\n"
+		<< "  -o   <string>   The pathway of the distance matrix(defaults: ./)"
 		<< "  \n"
 		<< "  -h/?   help pritn this message\n"
 		<< std::endl;
