@@ -13,7 +13,7 @@ Then
 
 You can get patterns file and Distance_Matrix(DM.txt) file
 
-Use this DM as input for nerghbor-joining method
+Use this DM.txt as input for nerghbor-joining method
 You can get a phylogenetic tree
 
 
