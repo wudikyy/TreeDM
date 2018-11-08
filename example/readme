@@ -3,9 +3,9 @@ low similarity sequences
 
 run： 
 		path/TreeDM -n 3 -s 0.03 -m 2 -i seqfile.fasta
-		path/phylip/exe/neighbor DM.txt
+		path/phylip/exe/neighbor DM.txt(infile)
 		
 or
 		path/TreeDM -n 3 -s 0.03 -m 2 -i seqfile.fasta -p path/patterns_file -o path_for_DistanceMatrix 
-		path/phylip/exe/neighbor DM.txt
+		path/phylip/exe/neighbor DM.txt(infile)
 		
